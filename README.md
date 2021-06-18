@@ -17,12 +17,12 @@ These aren't requirements for integrating a model, but you should read the *Alte
 1. Fork this repository
 1. Obtain a copy of the latest version of the output schema: `curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/output.json -o output-schema.json`
 1. Develop your connector (iteratively):
-  1. Create connector code (in a language of your choice) to transform the input/output from the COVID Policy Modelling schemas to/from the input/output your model uses, as described in more detail below
-  1. Edit `Dockerfile` to create an image containing both your model and connector code, with any dependencies, as described in more detail below
-  1. Test your connector code by running `docker-compose run test`
-    * You may need to edit `test-job.json` if your model does not support the parameters specified in the file.
-  1. Validate the output of your connector by running `docker-compose run validate`
-  1. Push your changes to Github, and ensure the Docker image is built and published successfully
+   1. Create connector code (in a language of your choice) to transform the input/output from the COVID Policy Modelling schemas to/from the input/output your model uses, as described in more detail below
+   1. Edit `Dockerfile` to create an image containing both your model and connector code, with any dependencies, as described in more detail below
+   1. Test your connector code by running `docker-compose run test`
+      * You may need to edit `test-job.json` if your model does not support the parameters specified in the file.
+   1. Validate the output of your connector by running `docker-compose run validate`
+   1. Push your changes to Github, and ensure the Docker image is built and published successfully
 1. Edit `meta.yml` to describe your model/connector
 1. If you're developing in a private repository, give the @covid-policy-modelling-bot Read access to your repository
 1. Raise a PR against the `web-ui` repository, copying the content of your `meta.yml` into the `models.yml` file
