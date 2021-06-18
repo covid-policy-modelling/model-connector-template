@@ -1,0 +1,40 @@
+{
+  "region": "US",
+  "subregion": "US-WY",
+  "parameters": {
+    "r0": 3.5,
+    "calibrationDate": "2020-04-18",
+    "calibrationCaseCount": 1400,
+    "calibrationDeathCount": 200,
+    "interventionPeriods": [
+      {
+        "startDate": "2020-03-15",
+        "reductionPopulationContact": 15,
+        "socialDistancing": "moderate"
+      },
+      {
+        "startDate": "2020-03-21",
+        "reductionPopulationContact": 65,
+        "socialDistancing": "moderate",
+        "schoolClosure": "aggressive"
+      },
+      {
+        "startDate": "2020-03-25",
+        "reductionPopulationContact": 90,
+        "socialDistancing": "aggressive",
+        "schoolClosure": "aggressive"
+      },
+      {
+        "startDate": "2020-05-01",
+        "reductionPopulationContact": 50,
+        "socialDistancing": "moderate",
+        "schoolClosure": "mild"
+      },
+      {
+        "startDate": "2020-06-01",
+        "reductionPopulationContact": 0
+      }
+    ],
+    "r0": null
+  }
+}

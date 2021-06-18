@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  release:
+    build:
+      context: .
+    # This is set this way to make things easier in the Actions workflows.
+    image: image
+
+  run-model:
+    build:
+      context: .
+    volumes:
+      - ./test-job.json:/data/input/inputFile.json:ro
+      - ./output:/data/output:rw
+      - ./log:/data/log:rw
+
+  validate:
+    image: 3scale/ajv
+    volumes:
+      - ./output-schema.json:/data/output-schema.json
+      - ./output:/data/output
+    command: validate -s output-schema.json -d output/data.json

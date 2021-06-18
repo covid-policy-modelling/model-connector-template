@@ -1,0 +1,23 @@
+demo: # Replace with a *short* name that can identify your model in code/URLs
+  name: Demo Model # Name of your model, to be displayed in the UI
+  origin: Covid Policy Modelling # Name of the organisation responsible for the model, to be displayed in the UI
+  isProductionReady: false
+  imageURL: docker.pkg.github.com/covid-policy-modelling/model-connector-template/model-connector:1.0.0 # URL of your published Docker container
+  metaURLs: # (Optional) URLs with more data about the model, to be displayed in the UI
+    code: https://github.com/covid-policy-modelling/model-connector-template
+    paper: https://github.com/covid-modeling/covid-model-evaluation/blob/main/how-predictive-are-models-of-covid-19.pdf
+    website: https://github.com/covid-policy-modelling
+  description: |
+    A template for adding new models
+    A short description of your model, around a paragraph, to be displayed in the UI
+  supportedParameters: # Delete parameters (as supplied in the input schema) that your model conenctor does not support
+    - interventionStrategies
+    - contactReduction
+    - r0
+  supportedRegions: # List regions and subregions (as described in the input schema) that your model connector supports
+    GB:
+      - GB-ENG
+      - GB-NIR
+      - GB-SCT
+      - GB-WAL
+    IE: [] # Use an empty array if you only support the top-level region
