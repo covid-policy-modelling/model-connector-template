@@ -9,6 +9,8 @@ This repository is a template for model connectors used to add new models to the
 * [Requirements for Docker images](#requirements-for-docker-images)
 * [Input](#input)
 * [Output](#output)
+* [Alternative ntegrations](#alternative-integrations)
+* [Examples](#examples)
 
 ## Assumptions
 
@@ -62,28 +64,35 @@ These are not requirements for integrating a model, but you should read the *Alt
 - If your model requires additional data beyond that given in the input schema, either:
   - Add it your container at build-time, e.g. with [`ADD`](https://docs.docker.com/engine/reference/builder/#add)/[`COPY`](https://docs.docker.com/engine/reference/builder/#copy)/[`RUN`](https://docs.docker.com/engine/reference/builder/#run)
   - Download it in your connector code
-- At run-time, copy/store any input data in `/data/input` (this will be volume mounted into the container, and will be available for download in the UI after completion)
-- At run-time, copy/store any output data in `/data/output` (this will be volume mounted into the container, and will be available for download in the UI after completion)
-- Any messages that are printed to STDOUT will not be displayed to end-users, but can be useful for debugging in the backend.
+- At run-time, 
+  - Copy/store any input data in `/data/input` 
+    - This will be volume mounted into the container, and will be available for download in the UI after completion
+  - Copy/store any output data in `/data/output` 
+    - This will be volume mounted into the container, and will be available for download in the UI after completion
+- Any messages that are printed to STDOUT will not be displayed to end-users, but can be useful for debugging in the backend
 - Any additional logging should be copied/stored in `/data/log` (this will be volume mounted into the container, but will not be available for download by default)
 
 ### Input
 
-A file with all of the required input information will be mounted into the container as `/data/input/inputFile.json`.
-This file will contain JSON that satisfies the generalized [`ModelInput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/input.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-input.ts).
+A file with all of the required input information will be mounted into the container as: 
 
-Your connector code should transform this input into whichever parameters or input files your model accepts.
-(If your model already accepts input in this format, the connector can simply pass it on)
+* `/data/input/inputFile.json`.
+
+This file will contain JSON that satisfies the generalized [`ModelInput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/input.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-input.ts)).
+
+Your connector code should transform this input into whichever parameters or input files your model accepts (if your model already accepts input in this format, the connector can simply pass it on).
 
 Not all input parameters may be appropriate for your model, but you should make use of those you can, and document `meta.yml` accordingly.
 
 ### Output
 
-Your container is expected to create a file: `/data/output/data.json` after the simulation.
-This file should contain JSON that satisfies the generalized [`ModelOutput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/output.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-output.ts).
+Your container is expected to create a fileafter the simulation:
 
-Your connector code should transform the output of your model into this format.
-(Again, if your model already produces output in this format, the connector can simply pass it on)
+*  `/data/output/data.json`
+
+This file should contain JSON that satisfies the generalized [`ModelOutput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/output.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-output.ts)).
+
+Your connector code should transform the output of your model into this format (again, if your model already produces output in this format, the connector can simply pass it on)
 
 Again, not all the output parameters may be appropriate for your model.
 If the metric is optional (e.g. `R`) you can simply omit it.
