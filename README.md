@@ -9,7 +9,7 @@ This repository is a template for model connectors used to add new models to the
 * [Requirements for Docker images](#requirements-for-docker-images)
 * [Input](#input)
 * [Output](#output)
-* [Alternative ntegrations](#alternative-integrations)
+* [Alternative integrations](#alternative-integrations)
 * [Examples](#examples)
 
 ## Assumptions
