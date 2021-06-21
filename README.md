@@ -94,7 +94,7 @@ This file should contain JSON that satisfies the generalized [`ModelOutput` sche
 
 An illustrative overview JSON instance document is given below to show the expected sample output (note that JSON does NOT support comments and are included blow purely for guidance) as a JSON schema may not be easy to read. The order of items in the `time`, `metadata` and `aggregate` sections is not important but, other than for the `R` number in the `aggregate` section, they must all be there.
 
-```json
+```html
 {
     "time": {
         <!-- An ISO-8601, e.g. "2021-05-27, string encoding the date that each 
