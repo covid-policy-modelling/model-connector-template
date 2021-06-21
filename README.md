@@ -2,6 +2,8 @@
 
 This repository is a template for model connectors used to add new models to the COVID Policy Modelling web-ui.
 
+## Content
+
 * [Assumptions](#assumptions)
 * [Process](#process)
 * [Requirements for Docker images](#requirements-for-docker-images)
@@ -22,11 +24,12 @@ These are not requirements for integrating a model, but you should read the *Alt
 
 ## Process
 
-1. Make sure that your code can be run at the command line
-
-1. Create a [Dockerfile](https://docs.docker.com/engine/reference/builder/), loading all the necessary dependencies to run your model/code, and ensure that your model/code can run in this docker instance
 
 1. Fork this repository
+
+1. To start, make sure that your code can be run at the command line
+
+1. Create a [Dockerfile](https://docs.docker.com/engine/reference/builder/), loading all the necessary dependencies to run your model/code, and ensure that your model/code can run in this docker instance
 
 1. Obtain a copy of the latest version of the input and output versionof the JSON schema: 
     ```bash
