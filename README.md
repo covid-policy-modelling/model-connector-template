@@ -35,8 +35,8 @@ These are not requirements for integrating a model, but you should read the *Alt
 
 1. Obtain a copy of the latest version of the input and output versionof the JSON schema: 
     ```bash
-    $ curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/output.json -o output-schema.json
     $ curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/input.json -o input-schema.json
+    $ curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/output.json -o output-schema.json
     ```
     
 1. Develop your connector (iteratively):
@@ -80,6 +80,62 @@ A file with all of the required input information will be mounted into the conta
 
 This file will contain JSON that satisfies the generalized [`ModelInput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/input.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-input.ts)).
 
+A schematic example of what an `inputFile.json` will look like is shown belo (note JSON does not support comments so they are included here only for guidance). The `region` and all values in the `parameters` section are required but  specifying a `subregion` is optional. The ordering of values within a section may also vary:
+
+```html
+   <!-- A generalized description of the input to an epidemiological model. -->
+{
+   <!-- ISO 3166 country code for the region results correspond to, e.g. "GB",
+        see https://www.iso.org/iso-3166-country-codes.html. -->
+   "region": "GB",
+   <!-- Optional specification of a subregion. -->
+   "subregion":"GB-ENG",
+   "parameters":{
+        <!-- An ISO-8601 string encoding the date of the most recent case data in 
+             the region. -->
+        "calibrationDate": "2021-06-17",
+        <!-- The total number of confirmed cases in the region before the 
+             calibration date. -->
+        "calibrationCaseCount": 1400,
+        <!-- The total number of deaths in the region before the calibration date. -->
+        "calibrationDeathCount": 200,
+        <!-- A list of time periods, each with a different set of interventions. -->
+        "interventionPeriods": [      
+        {
+            <!-- An ISO-8601 string encoding the date that these interventions 
+                 begin. -->
+            "startDate": "2020-03-15",
+            <!-- The estimated reduction in population contact resulting from
+                 all of the above interventions. Some models require this       
+                 generalized parameter instead of the individual interventions.
+             -->
+            "reductionPopulationContact": 15,
+             <!-- One or more of:
+                  "caseIsolation"     - The level to which individuals with symptoms 
+                                        self-isolate.
+                   "schoolClosure"    - The level of school closure in the region.
+                   "socialDistancing" - The level of social distancing in the region.
+                   "voluntaryHomeQuarantine" - The level to which entire households 
+                                               self-isolate when one member of the
+                                               household has symptoms.
+                    which can have a value of: "mild", "moderate", "aggressive"
+             -->
+            "socialDistancing": "moderate"
+          },
+          {
+            <!-- More interventions -->
+          }
+        ],
+        <!-- The assumed reproduction number for the virus. If this is null, then
+             each model will use its own default value. -->
+        "r0": null
+  }
+ 
+}
+```
+
+Of course your model/code may choose to ignore some or most of all of these. However, if you are asked to model a specific `region` it will not look so good if you return the results for a completely different `region`.
+
 Your connector code should transform this input into whichever parameters or input files your model accepts (if your model already accepts input in this format, the connector can simply pass it on).
 
 Not all input parameters may be appropriate for your model, but you should make use of those you can, and document `meta.yml` accordingly.
@@ -92,10 +148,11 @@ Your container is expected to create a fileafter the simulation:
 
 This file should contain JSON that satisfies the generalized [`ModelOutput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/output.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-output.ts)).
 
-An illustrative overview JSON instance document is given below to show the expected sample output (note that JSON does NOT support comments and are included blow purely for guidance) as a JSON schema may not be easy to read. The order of items in the `time`, `metadata` and `aggregate` sections is not important but, other than for the `R` number in the `aggregate` section, they must all be there.
+An illustrative example `data.json` instance document is given below to show the expected sample output (note that JSON does NOT support comments and are included blow purely for guidance) as a JSON schema may not be easy to read. The order of items in the `time`, `metadata` and `aggregate` sections is not important but, other than for the `R` number in the `aggregate` section, they must all be there.
 
 ```html
 {
+    <!-- A generalized description of the outputs of an epidemiological model. -->
     "time": {
         <!-- An ISO-8601, e.g. "2021-05-27, string encoding the date that each 
              timeseries begins. -->
@@ -107,7 +164,6 @@ An illustrative overview JSON instance document is given below to show the expec
              Each value is a number of days after `t0`. -->
         "extent": [1,100]
     },
-    <!-- A generalized description of the input to an epidemiological model. -->
     "metadata": {
          <!-- ISO 3166 country code for the region results correspond to, e.g. "GB",
               see https://www.iso.org/iso-3166-country-codes.html. -->
@@ -153,7 +209,8 @@ An illustrative overview JSON instance document is given below to show the expec
                        generalized parameter instead of the individual interventions.
                    -->
                   "reductionPopulationContact": 34
-                }
+                },
+                { <!-- Another intervention and so on -->}
              ]
         }
     },
