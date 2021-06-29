@@ -74,8 +74,8 @@ For more information on these:
       * Add the connector code (e.g. using [`COPY`](https://docs.docker.com/engine/reference/builder/#copy))
       * Set the `CMD` to run your connector code
       * Some further requirements are described in more detail below.
-   1. Build your image by running `docker-compose build test`.
-   1. Test your connector code by running `docker-compose run test`.
+   1. Build your image by running `docker-compose build run-model`.
+   1. Test your connector code by running `docker-compose run run-model`.
       * You may need to edit the sample input file [`test-job.json`](test-job.json) if your model does not support the parameters specified in the file.
    1. Validate the output of your connector by running `docker-compose run validate`.
    1. Push your changes to Github, and ensure the Docker image is built and published successfully.
