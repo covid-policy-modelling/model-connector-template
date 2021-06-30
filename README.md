@@ -56,7 +56,7 @@ For more information on these:
 
 1. Fork this repository.
 
-1. Ensure that your code can be run using the command line, e.g. using `Rscript` rather than *RStudio* etc.
+1. Ensure that your code can be run using the command line, e.g. using `Rscript` rather than *RStudio*, etc.
 
 1. Obtain a copy of the latest version of the input and output versions of the JSON schema:
 
