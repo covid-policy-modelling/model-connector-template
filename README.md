@@ -27,7 +27,7 @@ Both the input and output have to conform to input or output JSON schema respect
 To get this framework to work you will need to have the following tooling installed in your system:
 
 * Either:
-  * [Docker Desktop](https://www.docker.com/products/docker-desktop) (only for Windows/macOS)
+  * [Docker Desktop](https://www.docker.com/products/docker-desktop) (only for Windows/macOS) or
   * [Docker Engine](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/engine/install/)
 
 ## Assumptions
