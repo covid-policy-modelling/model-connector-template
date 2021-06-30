@@ -15,7 +15,7 @@ This repository is a template for model connectors used to add new models to the
 
 ## Prequisites
 
-To get this framework to work you will need to have the following tooling installed in your system:
+To add your model/code to work within this framework will need to have the following tooling installed in your system:
 
 1. [Docker desktop](https://www.docker.com/products/docker-desktop) or docker and docker-compose if you are more of a purist.
 1. [Node.js / npm](https://nodejs.org/en/download/).
@@ -90,7 +90,7 @@ This file will contain JSON that satisfies the generalized [`ModelInput` schema]
 
 A schematic example of what an `inputFile.json` will look like is shown belo (note JSON does not support comments so they are included here only for guidance). The `region` and all values in the `parameters` section are required but  specifying a `subregion` is optional. The ordering of values within a section may also vary:
 
-```html
+```javascript
    <!-- A generalized description of the input to an epidemiological model. -->
 {
    <!-- ISO 3166 country code for the region results correspond to, e.g. "GB",
@@ -158,7 +158,7 @@ This file should contain JSON that satisfies the generalized [`ModelOutput` sche
 
 An illustrative example `data.json` instance document is given below to show the expected sample output (note that JSON does NOT support comments and are included blow purely for guidance) as a JSON schema may not be easy to read. The order of items in the `time`, `metadata` and `aggregate` sections is not important but, other than for the `R` number in the `aggregate` section, they must all be there.
 
-```html
+```javascript
 {
     <!-- A generalized description of the outputs of an epidemiological model. -->
     "time": {
@@ -276,7 +276,7 @@ For others, you should output an array of the same length as `timestamps`, with 
 
 * You can develop your connector code in the same repository as your model
   * In that case, instead of forking simply download the files from this repository into appropriate locations in your repository
-* You can publish Docker images to any registry (Github Container Registry, Docker Hub, Azure Container Registry etc.).
+* You can publish Docker images to any registry (Github Container Registry, Docker Hub, Azure Container Registry, etc.).
   * You will need to edit the workflow definitions in `.github/workflows` and the `imageURL` in `meta.yml`
   * If your image is private, contact us to discuss appropriate access credentials. **MA: will this not also mean that they cannot publish their images to Packages (unless they pay)?**
 * You can use an alternative CI system, or push images manually, or develop your code outside of Github
