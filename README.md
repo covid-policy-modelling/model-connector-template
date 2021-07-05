@@ -58,13 +58,12 @@ For more information on these:
 
 1. Ensure that your code can be run using the command line, e.g. using `Rscript` rather than *RStudio*, etc.
 
-1. Obtain a copy of the latest version of the input and output versions of the JSON schema:
+1. Obtain a copy of the latest version of the output JSON schema:
 
     ```bash
-    curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/input.json -o input-schema.json
     curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/output.json -o output-schema.json
     ```
-
+    
 1. Develop your connector (iteratively):
    1. Create connector code (in a language of your choice) to transform the input/output from the COVID Policy Modelling schemas to/from the input/output your model uses, as described in more detail below, and execute your model.
    1. Edit [`Dockerfile`](Dockerfile) to contain your model and connector code:
