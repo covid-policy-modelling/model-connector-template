@@ -76,7 +76,7 @@ For more information on these:
    1. Build your image by running `docker-compose build run-model`.
    1. Test your connector code by running `docker-compose run run-model`.
       * You may need to edit the sample input file [`test-job.json`](test-job.json) if your model does not support the parameters specified in the file.
-   1. Validate the output of your connector by running `docker-compose run validate`.
+   1. Validate the output of your connector by running `docker-compose run --rm validate`.
    1. Push your changes to Github, and ensure the Docker image is built and published successfully.
 
 1. Edit `meta.yml` to describe your model/connector.
