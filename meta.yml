@@ -10,7 +10,7 @@ demo: # Replace with a *short* name that can identify your model in code/URLs
   description: |
     A template for adding new models
     A short description of your model, around a paragraph, to be displayed in the UI
-  supportedParameters: # Delete parameters (as supplied in the input schema) that your model conenctor does not support
+  supportedParameters: # Delete parameters (as supplied in the input schema) that your model connector does not support
     - interventionStrategies
     - contactReduction
     - r0
