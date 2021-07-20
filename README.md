@@ -63,7 +63,7 @@ For more information on these:
     ```bash
     curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/output.json -o output-schema.json
     ```
-    
+
 1. Develop your connector (iteratively):
    1. Create connector code (in a language of your choice) to transform the input/output from the COVID Policy Modelling schemas to/from the input/output your model uses, as described in more detail below, and execute your model.
    1. Edit [`Dockerfile`](Dockerfile) to contain your model and connector code:
@@ -79,11 +79,15 @@ For more information on these:
    1. Validate the output of your connector by running `docker-compose run --rm validate`.
    1. Push your changes to Github, and ensure the Docker image is built and published successfully.
 
+1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.1`) and push the tag to GitHub. Ensure the Docker image is build and published successfully
+
 1. Edit `meta.yml` to describe your model/connector.
 
 1. If you're developing in a private repository, give the @covid-policy-modelling-bot *Read* access to your repository.
 
 1. Raise a PR against the `web-ui` repository, copying the content of your `meta.yml` into the `models.yml` file.
+
+1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model
 
 ## Requirements for Docker images
 
@@ -267,6 +271,16 @@ All keys (except `R`) in the `aggregate` object are required.
 Not all these output parameters may be appropriate for your model.
 For these, you should output an array of the same length as `timestamps`, with all entries set to `0`.
 For `R`, if your model does not produce this, you can simply omit the key.
+
+## Updating your model
+
+Changes to models should be made by following a similar approach to initial creation.
+
+1. Make and test changes to your model / connector code
+1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.2`) and push the tag to GitHub. Ensure the Docker image is build and published successfully
+1. Edit `meta.yml` to update the `imageURL` to point to your latest version
+1. Raise a PR against the `web-ui` repository, to make the same change to the `models.yml` file.
+1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model
 
 ## Alternative integrations
 
