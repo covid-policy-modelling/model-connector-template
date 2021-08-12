@@ -204,6 +204,19 @@ An expanded example `data.json` is shown below (note JSON does not support comme
              Each value is a number of days after `t0`. -->
         "extent": [1,100]
     },
+    <!-- Information about your model -->
+    "model": {
+        <!-- A short display name to identify the model. Usually the same as in meta.yml -->
+        "name": "Demo Model",
+        <!-- A version number identifying the version of the model used in this run.
+             This should be a number that is meaningful to you, e.g. the output from
+             `./demo-model --version` -->
+        "modelVersion": "0.0.0",
+        <!-- A version number identifying the version of the connector used in this run.
+             If you are using the sample Dockerfile/GitHub Actions definition, this can be obtained
+             from the environment variable `CONNECTOR_VERSION`. -->
+        "connectorVersion": "0.0.0"
+    },
     <!-- A copy of the input data -->
     "metadata": {
         "region": "GB",

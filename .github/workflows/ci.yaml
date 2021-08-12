@@ -12,9 +12,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Set version
+        run: |
+          # Strip git ref prefix (refs/heads/ or refs/tags/) from version
+          # but keep the rest of the ref. Replaces / with - to make the package name valid.
+          # Do not attempt to obtain the version number from vx.y.z tags:
+          # this is handled by the publish_version workflow.
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Build image
         # Name it `image` for now. The push step below will set a meaningful name.
-        run: docker build -t image .
+        run: docker build --build-arg CONNECTOR_VERSION=$VERSION -t image .
 
       - name: Log into package registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -24,11 +33,6 @@ jobs:
           IMAGE_ID=docker.pkg.github.com/${GITHUB_REPOSITORY}/model-connector
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix (refs/heads/ or refs/tags/) from version
-          # but keep the rest of the ref. Replaces / with - to make the package name valid.
-          # Do not attempt to obtain the version number from vx.y.z tags:
-          # this is handled by the publish_version workflow.
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
           # Always tag with git sha or version tag
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
