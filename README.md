@@ -80,7 +80,7 @@ For more information on these:
    1. Validate the output of your connector by running `docker-compose run --rm validate`.
    1. Push your changes to Github, and ensure the Docker image is built and published successfully.
 
-1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.1`) and push the tag to GitHub. Ensure the Docker image is build and published successfully
+1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.1`) and push the tag to GitHub. Ensure the Docker image is built and published successfully.
 
 1. Edit [meta.yml](meta.yaml) to describe your model/connector.
 
@@ -88,7 +88,7 @@ For more information on these:
 
 1. Raise a PR against the `web-ui` repository, copying the content of your `meta.yml` into the `models.yml` file.
 
-1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model
+1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model.
 
 ## Requirements for Docker images
 
@@ -238,7 +238,8 @@ An expanded example `data.json` is shown below (note JSON does not support comme
         }
     },
     <!-- Each output below is an array corresponding to the `extent` specified above.
-         If a particular metric is not supported an array of zeros can be given. -->
+         If a particular metric is not supported an array of zeros can be given. 
+         Other than for the R values all numbers given SHOULD be integers. -->
     "aggregate": {
         "metrics": {
             <!-- Current number of critical cases on this day (assume represents
