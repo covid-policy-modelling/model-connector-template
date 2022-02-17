@@ -1,8 +1,8 @@
 demo: # Replace with a *short* name that can identify your model in code/URLs
   name: Demo Model # Name of your model, to be displayed in the UI
   origin: Covid Policy Modelling # Name of the organisation responsible for the model, to be displayed in the UI
-  isProductionReady: false
-  imageURL: docker.pkg.github.com/covid-policy-modelling/model-connector-template/model-connector:1.0.0 # URL of your published Docker container
+  enabled: true # Set to false if your repository is private
+  imageURL: docker.pkg.github.com/covid-policy-modelling/model-connector-template/model-connector:latest # URL of your published Docker container
   metaURLs: # (Optional) URLs with more data about the model, to be displayed in the UI
     code: https://github.com/covid-policy-modelling/model-connector-template
     paper: https://github.com/covid-modeling/covid-model-evaluation/blob/main/how-predictive-are-models-of-covid-19.pdf

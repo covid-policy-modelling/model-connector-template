@@ -84,7 +84,7 @@ For more information on these:
 
 1. Edit [meta.yml](meta.yaml) to describe your model/connector.
 
-1. If you are developing in a private repository, give the @covid-policy-modelling-bot *Read* access to your repository.
+1. If you are developing in a private repository, make sure to give the appropriate machine user access to your repository for any deployment that will use your connector (e.g. for the staging server, give the @covid-policy-modelling-bot *Read* access to your repository).
 
 1. Raise a PR against the `web-ui` repository, copying the content of your `meta.yml` into the `models.yml` file.
 
@@ -238,7 +238,7 @@ An expanded example `data.json` is shown below (note JSON does not support comme
         }
     },
     <!-- Each output below is an array corresponding to the `extent` specified above.
-         If a particular metric is not supported an array of zeros can be given. 
+         If a particular metric is not supported an array of zeros can be given.
          Other than for the R values all numbers given SHOULD be integers. -->
     "aggregate": {
         "metrics": {
@@ -292,10 +292,11 @@ For `R`, if your model does not produce this, you can simply omit the key.
 Changes to models should be made by following a similar approach to initial creation.
 
 1. Make and test changes to your model / connector code.
+1. Edit `meta.yml` with any new parameters / regions etc. if necessary
+  1. Raise a PR against the `web-ui` repository, to make the same change to the `models.yml` file.
 1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.2`) and push the tag to GitHub. Ensure the Docker image is build and published successfully.
-1. Edit `meta.yml` to update the `imageURL` to point to your latest version.
-1. Raise a PR against the `web-ui` repository, to make the same change to the `models.yml` file.
-1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model.
+1. Notify the maintainers of any infrastructure that deploys a specific version of your model (e.g in `web-ui/.override-staging/models.yml`)
+  1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model.
 
 ## Alternative integrations
 
