@@ -93,8 +93,9 @@ For more information on these:
 ## Requirements for Docker images
 
 * The CMD/connector must return:
-  * a non-zero status code if the simulation fails, and
-  * zero otherwise (for success)
+  * a zero status if the simulation succeeds (e.g. with `exit`, `sys.exit()` or whatever is appropriate for your language)
+  * a non-zero status if the simulation fails. A connector *may* use specific codes to indicate different types of errors, but this is not required. At present, the error codes understood by the model-runner are:
+    * `10` - The connector does not support the requested region/subregion
   * If the model already returns an appropriate status, the connector can simply pass it on. Otherwise the connector code should check the model output/logs for appropriate messages.
 * The container must not require any arguments in order to carry out the simulation:
   * Specify [`CMD`](https://docs.docker.com/engine/reference/builder/#cmd) (or [`ENTRYPOINT`](https://docs.docker.com/engine/reference/builder/#entrypoint)) appropriately in such a way that the container can be executed with no special arguments or other knowledge.
