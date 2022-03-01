@@ -116,7 +116,7 @@ For more information on these:
 
 A file with all of the required input information will be mounted into the container as *`/data/input/inputFile.json`*.
 
-This file will contain JSON that satisfies the [`ModelInput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/input.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-input.ts)).
+This file will contain JSON that satisfies the [`ModelInput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/input.json) (you may also wish to refer to the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-input.ts)).
 
 An expanded example of an `inputFile.json` is shown below (note JSON does not support comments so they are included here only for guidance).
 
@@ -187,7 +187,7 @@ You should document `meta.yml` with the supported parameters.
 
 After the simulation, your connector is expected to create the file *`/data/output/data.json`*.
 
-This file should contain JSON that satisfies the [`ModelOutput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/output.json) (you can also use the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-output.ts)).
+This file should contain JSON that satisfies the [`ModelOutput` schema](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/schema/output.json) (you may also wish to refer the [less-formal but more readable source](https://github.com/covid-policy-modelling/model-runner/blob/main/packages/api/src/model-output.ts)).
 
 An expanded example `data.json` is shown below (note JSON does not support comments so they are included here only for guidance).
 
