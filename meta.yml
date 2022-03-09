@@ -20,4 +20,9 @@ demo: # Replace with a *short* name that can identify your model in code/URLs
       - GB-NIR
       - GB-SCT
       - GB-WAL
-    IE: [] # Use an empty array if you only support the top-level region
+    US:
+      - US # If the connector supports both the top-level region and some subregions, you must explicitly repeat the top-level region in the array
+      - US-AK
+      - UK-AL
+    IE: # As a convenience, you can use a missing value if the connector only supports the top-level region
+    CA: [] # Or an empty array
