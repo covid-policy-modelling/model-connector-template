@@ -62,7 +62,7 @@ For more information on these:
 1. Obtain a copy of the latest version of the output JSON schema:
 
     ```bash
-    curl https://raw.githubusercontent.com/covid-policy-modelling/model-runner/main/packages/api/schema/output.json -o output-schema.json
+    curl https://raw.githubusercontent.com/covid-policy-modelling/schemas/main/schema/output.json -o output-schema.json
     ```
 
 1. Develop your connector (iteratively):
@@ -317,8 +317,8 @@ Note that these have not necessarily used this template, and so may be laid out 
 These are written in several languages (Python, R, TypeScript).
 Your connector can be in any language.
 
-* https://github.com/covid-modeling/covasim-connector
+* https://github.com/covid-policy-modelling/covasim-connector
 * https://github.com/gjackland/WSS
-* https://github.com/covid-policy-modelling/model-runner/tree/main/packages/mrc-ide-covidsim
-* https://github.com/covid-policy-modelling/model-runner/tree/main/packages/neherlab-covid-19-scenarios
+* https://github.com/covid-policy-modelling/covid-sim-connector
+* https://github.com/covid-policy-modelling/basel-connector
 
