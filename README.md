@@ -116,7 +116,7 @@ For more information on these:
 
 A file with all of the required input information will be mounted into the container as *`/data/input/inputFile.json`*.
 
-This file will contain JSON that satisfies the [`ModelInput` schema](hhttps://github.com/covid-policy-modelling/schemas/blob/main/schema/input.json) (you may also wish to refer to the [less-formal but more readable source](https://github.com/covid-policy-modelling/schemas/blob/main/src/model-input.ts)).
+This file will contain JSON that satisfies the [`ModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input.json) (you may also wish to refer to the [less-formal but more readable source](https://github.com/covid-policy-modelling/schemas/blob/main/src/model-input.ts)).
 
 An expanded example of an `inputFile.json` is shown below (note JSON does not support comments so they are included here only for guidance).
 
