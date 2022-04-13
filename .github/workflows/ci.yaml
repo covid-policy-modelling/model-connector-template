@@ -1,46 +1,63 @@
-name: Connector - Build, Test & Publish Docker
+name: Build, Test & Publish Docker
 on: push
+
+env:
+  IMAGE_NAME: "${{ github.event.repository.name }}"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: true
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Set version
+      - name: Set variables
+        id: variables
         run: |
+          IMAGE_ID=ghcr.io/${{ github.repository }}/$IMAGE_NAME
+          # Change all uppercase to lowercase
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
           # Strip git ref prefix (refs/heads/ or refs/tags/) from version
           # but keep the rest of the ref. Replaces / with - to make the package name valid.
           # Do not attempt to obtain the version number from vx.y.z tags:
           # this is handled by the publish_version workflow.
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,refs/\(heads\|tags\)/\(.*\),\2,' | tr '/' '-')
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Build image
-        # Name it `image` for now. The push step below will set a meaningful name.
-        run: docker build --build-arg CONNECTOR_VERSION=$VERSION -t image .
-
-      - name: Log into package registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push image (Local)
-        run: |
-          IMAGE_ID=docker.pkg.github.com/${GITHUB_REPOSITORY}/model-connector
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           # Always tag with git sha or version tag
           echo IMAGE_ID=$IMAGE_ID
+          echo "::set-output name=image_id::$IMAGE_ID"
           echo VERSION=$VERSION
-          docker tag image $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
-          # Use Docker `latest` tag convention for master.
-          [ "$VERSION" == "main" ] && VERSION=latest
+          echo "::set-output name=version::$VERSION"
+
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker-compose build --build-arg CONNECTOR_VERSION=$VERSION release
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        run: |
+          IMAGE_ID=${{ steps.variables.outputs.image_id }}
+          VERSION=${{ steps.variables.outputs.version }}
+
           echo IMAGE_ID=$IMAGE_ID
           echo VERSION=$VERSION
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+
+      - name: Push image (latest)
+        if: ${{ github.ref_name == 'main' }}
+        run: |
+          IMAGE_ID=${{ steps.variables.outputs.image_id }}
+          VERSION=latest
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag image $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+
