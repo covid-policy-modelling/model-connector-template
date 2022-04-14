@@ -37,6 +37,7 @@ This repository and these instructions assume the following:
 
 * The *connector* will be in a Github repository (public or private).
 * The *connector* will be developed in a repository separate to any others used by your model.
+* The *connector* will use the common input and output schema shared with other models.
 * The Docker images will be published automatically using [Github Actions](https://docs.github.com/en/actions).
 * The Docker image will be published to Github Packages (not the Github Container Registry).
 
@@ -62,7 +63,7 @@ For more information on these:
 1. Obtain a copy of the latest version of the output JSON schema:
 
     ```bash
-    curl https://raw.githubusercontent.com/covid-policy-modelling/schemas/main/schema/output.json -o output-schema.json
+    curl https://raw.githubusercontent.com/covid-policy-modelling/schemas/main/schema/output-common.json -o output-schema.json
     ```
 
 1. Develop your connector (iteratively):
@@ -116,179 +117,26 @@ For more information on these:
 
 ### Input
 
-A file with all of the required input information will be mounted into the container as *`/data/input/inputFile.json`*.
+A file with all of the required input information will be mounted into the container as *`/data/input/inputFile.json`*. This file will contain JSON that satisfies the [`CommonModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input-common.json).
 
-This file will contain JSON that satisfies the [`ModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input.json) (you may also wish to refer to the [less-formal but more readable source](https://github.com/covid-policy-modelling/schemas/blob/main/src/model-input.ts)).
+For more information on the format of the file, you can refer to:
 
-An expanded example of an `inputFile.json` is shown below (note JSON does not support comments so they are included here only for guidance).
-
-```javascript
-   <!-- A generalized description of the input to an epidemiological model. -->
-{
-   <!-- ISO-3166 country code for the region results correspond to, e.g. "GB",
-        see https://www.iso.org/iso-3166-country-codes.html. -->
-   "region": "GB",
-   <!-- Optional specification of a subregion. Usually an ISO-3166-2 subdivsion
-        code, but may be a code from some other recognised source, e.g. ONS in
-        the UK. -->
-   "subregion":"GB-ENG",
-   "parameters":{
-        <!-- An ISO-8601 string encoding the date of the most recent case data in
-             the region. -->
-        "calibrationDate": "2021-06-17",
-        <!-- The total number of confirmed cases in the region before the
-             calibration date. -->
-        "calibrationCaseCount": 1400,
-        <!-- The total number of deaths in the region before the calibration date. -->
-        "calibrationDeathCount": 200,
-        <!-- A list of time periods, each with a different set of interventions. -->
-        "interventionPeriods": [
-        {
-            <!-- An ISO-8601 string encoding the date that these interventions
-                 begin. -->
-            "startDate": "2020-03-15",
-            <!-- The estimated reduction in population contact resulting from
-                 all of the above interventions. Some models require this
-                 generalized parameter instead of the individual interventions.
-            -->
-            "reductionPopulationContact": 15,
-            <!-- One or more of:
-                  "caseIsolation" - The level to which individuals with symptoms
-                                    self-isolate.
-                  "schoolClosure" - The level of school closure in the region.
-                  "socialDistancing" - The level of social distancing in the region.
-                  "voluntaryHomeQuarantine" - The level to which entire households
-                                              self-isolate when one member of the
-                                              household has symptoms.
-                   which can have a value of: "mild", "moderate", "aggressive"
-            -->
-            "socialDistancing": "moderate"
-          },
-          {
-            <!-- More interventions -->
-          }
-        ],
-        <!-- The assumed reproduction number for the virus. If this is null, then
-             each model will use its own default value. -->
-        "r0": null
-  }
-
-}
-```
+* [Annotated example](https://github.com/covid-policy-modelling/schemas/blob/main/docs/input-common-annotated.json)
+* [Schema documentation](https://github.com/covid-policy-modelling/schemas/blob/main/docs/input-common.md)
 
 Your connector code should transform this input into whichever parameters or input files your model accepts (if your model already accepts input in this format, the connector can simply pass it on).
-
-The `region` and all values in the `parameters` section will always be provided, but the `subregion` may be omitted.
-The ordering of keys within an object may also vary.
-
-Your connector may choose to ignore some of the parameters.
-The connector must however at least take into account the specified `region` and `subregion` and either produce results for that geography, or return an error.
-You should document `meta.yml` with the supported parameters.
+Your connector may support only a small number of regions, and does not have to support any of the other parameters, but you should document `meta.yml` with the parameters you do support.
 
 ### Output
 
-After the simulation, your connector is expected to create the file *`/data/output/data.json`*.
+After the simulation, your connector is expected to create the file *`/data/output/data.json`*. This file should contain JSON that satisfies the [`CommonModelOutput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/output.json).
 
-This file should contain JSON that satisfies the [`ModelOutput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/output.json) (you may also wish to refer the [less-formal but more readable source](https://github.com/covid-policy-modelling/schemas/blob/main/src/model-output.ts)).
+For more information on the format of the file, you can refer to:
 
-An expanded example `data.json` is shown below (note JSON does not support comments so they are included here only for guidance).
-
-```javascript
-{
-    <!-- A generalized description of the outputs of an epidemiological model. -->
-    "time": {
-        <!-- An ISO-8601, e.g. "2021-05-27, string encoding the date that each
-             timeseries begins. -->
-        "t0": "2021-05-21",
-        <!-- Each timestamp value is a number of days after `t0` that correspond
-             to every series of metrics output for `t0` counts as 0. -->
-        "timestamps": [1,2,3, ... , 100],
-        <!-- The minimum and maximum timestamps for the series of reported metrics.
-             Each value is a number of days after `t0`. -->
-        "extent": [1,100]
-    },
-    <!-- Information about your model -->
-    "model": {
-        <!-- A short display name to identify the model. Usually the same as in meta.yml -->
-        "name": "Demo Model",
-        <!-- A version number identifying the version of the model used in this run.
-             This should be a number that is meaningful to you, e.g. the output from
-             `./demo-model --version` -->
-        "modelVersion": "0.0.0",
-        <!-- A version number identifying the version of the connector used in this run.
-             If you are using the sample Dockerfile/GitHub Actions definition, this can be obtained
-             from the environment variable `CONNECTOR_VERSION`. -->
-        "connectorVersion": "0.0.0"
-    },
-    <!-- A copy of the input data -->
-    "metadata": {
-        "region": "GB",
-        "subregion": "England",
-        "parameters": {
-            "calibrationCaseCount": 1400,
-            "calibrationDate": "2021-05-21",
-            "r0": null,
-            "calibrationDeathCount": 200,
-            "interventionPeriods": [
-                {
-                 "startDate": "2021-06-21",
-                  "schoolClosure": "mild",
-                  "caseIsolation": "aggressive",
-                  "voluntaryHomeQuarantine": "moderate",
-                  "reductionPopulationContact": 34
-                }
-             ]
-        }
-    },
-    <!-- Each output below is an array corresponding to the `extent` specified above.
-         If a particular metric is not supported an array of zeros can be given.
-         Other than for the R values all numbers given SHOULD be integers. -->
-    "aggregate": {
-        "metrics": {
-            <!-- Current number of critical cases on this day (assume represents
-                 ICU demand). -->
-            "Critical": [],
-            <!-- Current number of critical cases on this day who are well enough
-                 to leave the ICU but still need a hospital bed. -->
-            "CritRecov": [],
-            <!-- Total number of critical cases since the beginning of the epidemic. -->
-            "cumCritical": [],
-            <!-- Total number of patients recovered from critical cases since
-                 the beginning of the epidemic. -->
-            "cumCritRecov": [],
-            <!-- Total number of influenza-like illnesses since the beginning of
-                 the epidemic. -->
-            "cumILI": [],
-            <!-- Total number of mild cases since the beginning of the epidemic. -->
-            "cumMild": [],
-            <!-- Current number of Severe Acute Respiratory Illness cases on
-                 this day (assume represents hospital demand). -->
-            "SARI": [],
-            <!-- Total number of severe acute respiratory illnesses since the beginning
-                 of the epidemic. -->
-            "cumSARI": [],
-            <!-- Current number of influenza-like illness cases on this day
-                (assume represents GP demand). -->
-            "ILI": [],
-            <-- Number of deaths occurring on this day. -->
-            "incDeath": [],
-            <!-- Current number of mild cases on this day. -->
-            "Mild": [],
-            <!-- R-number on this day. -->
-            "R": []
-        }
-    }
-
-}
-```
+* [Annotated example](https://github.com/covid-policy-modelling/schemas/blob/main/docs/output-common-annotated.json)
+* [Schema documentation](https://github.com/covid-policy-modelling/schemas/blob/main/docs/output-common.md)
 
 Your connector code should transform the output of your model into this format (again, if your model already produces output in this format, the connector can simply pass it on).
-
-The order of keys in the `time`, `metadata` and `aggregate` objects is not important.
-All keys (except `R`) in the `aggregate` object are required.
-Not all these output parameters may be appropriate for your model.
-For these, you should output an array of the same length as `timestamps`, with all entries set to `0`.
-For `R`, if your model does not produce this, you can simply omit the key.
 
 ## Updating your model
 
@@ -303,6 +151,8 @@ Changes to models should be made by following a similar approach to initial crea
 
 ## Alternative integrations
 
+* You can develop your connector to use a different input and/or output schema, such as [`MinimalModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input-minimal.json) and [`MinimalModelOutput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/output.json).
+  * In that case, ensure you download the correct schema to use for validation, and follow [any relevant instructions](https://github.com/covid-policy-modelling/schemas/blob/main/README.md) for the schema.
 * You can develop your connector code in the same repository as your model.
   * In that case, instead of forking simply download the files from this repository into appropriate locations in your repository.
   * Instead of downloading your model into the container, you can instead use `COPY`.
