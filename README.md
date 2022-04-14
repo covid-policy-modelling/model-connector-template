@@ -90,6 +90,8 @@ For more information on these:
 
 1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model.
 
+1. Update this README to be specific to your model, and to remove any parts that will not be needed in future (e.g. this *Process* section)
+
 ## Requirements for Docker images
 
 * The CMD/connector must return:
