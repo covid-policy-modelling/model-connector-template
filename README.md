@@ -151,7 +151,7 @@ Changes to models should be made by following a similar approach to initial crea
 
 ## Alternative integrations
 
-* You can develop your connector to use a different input and/or output schema, such as [`MinimalModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input-minimal.json) and [`MinimalModelOutput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/output.json).
+* You can develop your connector to use a different input and/or output schema, such as [`MinimalModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input-minimal.json) and [`MinimalModelOutput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/output.json), or by adding a new model-specific schema.
   * In that case, ensure you download the correct schema to use for validation, and follow [any relevant instructions](https://github.com/covid-policy-modelling/schemas/blob/main/README.md) for the schema.
 * You can develop your connector code in the same repository as your model.
   * In that case, instead of forking simply download the files from this repository into appropriate locations in your repository.
@@ -173,4 +173,4 @@ Your connector can be in any language.
 * https://github.com/gjackland/WSS
 * https://github.com/covid-policy-modelling/covid-sim-connector
 * https://github.com/covid-policy-modelling/basel-connector
-
+* https://github.com/covid-policy-modelling/sir-ode-python-connector
