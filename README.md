@@ -35,7 +35,7 @@ To get this framework to work you will need to have the following tooling instal
 
 This repository and these instructions assume the following:
 
-* The *connector* will be in a Github repository (public or private).
+* The *connector* will be in a public Github repository.
 * The *connector* will be developed in a repository separate to any others used by your model.
 * The *connector* will use the common input and output schema shared with other models.
 * The Docker images will be published automatically using [Github Actions](https://docs.github.com/en/actions).
@@ -78,14 +78,15 @@ For more information on these:
    1. Build your image by running `docker-compose build run-model`.
    1. Test your connector code by running `docker-compose run run-model`.
       * You may need to edit the sample input file [test-job.json](test-job.json) if your model does not support the parameters specified in the file.
+      * You should not make changes to the `docker-compose.yml` file (e.g. to add mounts). These changes will not be available when the connector is run via the `web-ui`.
    1. Validate the output of your connector by running `docker-compose run --rm validate`.
    1. Push your changes to Github, and ensure the Docker image is built and published successfully.
 
 1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.1`) and push the tag to GitHub. Ensure the Docker image is built and published successfully.
 
-1. Edit [meta.yml](meta.yaml) to describe your model/connector.
+1. On your repository page on GitHub, go to "Packages" then select the package for your connector. Under "Danger Zone", select "Change visibility", and set the visibility to "Public". Enter the repository name to confirm.
 
-1. If you are developing in a private repository, make sure to give the appropriate machine user access to your repository for any deployment that will use your connector (e.g. for the staging server, give the @covid-policy-modelling-bot *Read* access to your repository).
+1. Edit [meta.yml](meta.yaml) to describe your model/connector.
 
 1. Raise a PR against the `web-ui` repository, copying the content of your `meta.yml` into the `models.yml` file.
 
@@ -156,6 +157,9 @@ Changes to models should be made by following a similar approach to initial crea
 * You can develop your connector code in the same repository as your model.
   * In that case, instead of forking simply download the files from this repository into appropriate locations in your repository.
   * Instead of downloading your model into the container, you can instead use `COPY`.
+* You can develop in a private GitHub repository, with a private connector package.
+  * In this case, you will need to contact us to discuss appropriate access credentials.
+    * For the current staging server, this means giving the @covid-policy-modelling-bot *Read* access to your repository.
 * You can publish Docker images to any registry (Github Container Registry, Docker Hub, Azure Container Registry etc.).
   * You will need to edit the workflow definitions in `.github/workflows` and the `imageURL` in `meta.yml`.
   * If your image is private, contact us to discuss appropriate access credentials.

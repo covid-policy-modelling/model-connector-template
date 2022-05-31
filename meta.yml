@@ -1,4 +1,4 @@
-demo: # Replace with a *short* name that can identify your model in code/URLs
+demo: # Replace with a *short* name that can identify your model in code/URLs. Use only lower-case letters or hyphens.
   name: Demo Model # Name of your model, to be displayed in the UI
   origin: Covid Policy Modelling # Name of the organisation responsible for the model, to be displayed in the UI
   enabled: true # Set to false if your repository is private
