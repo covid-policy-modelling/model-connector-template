@@ -55,7 +55,6 @@ For more information on these:
 
 ## Process
 
-
 1. Fork this repository.
 
 1. Ensure that your code can be run using the command line, e.g. using `Rscript` rather than *RStudio*, etc.
@@ -154,6 +153,14 @@ Changes to models should be made by following a similar approach to initial crea
 
 * You can develop your connector to use a different input and/or output schema, such as [`MinimalModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input-minimal.json) and [`MinimalModelOutput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/output.json), or by adding a new model-specific schema.
   * In that case, ensure you download the correct schema to use for validation, and follow [any relevant instructions](https://github.com/covid-policy-modelling/schemas/blob/main/README.md) for the schema.
+  * In your `meta.yml`, specify which schema you use, e.g.
+
+  ```yml
+    supportedSchemas:
+      input: MinimalModelInput
+      output: MinimalModelOutput
+  ```
+
 * You can develop your connector code in the same repository as your model.
   * In that case, instead of forking simply download the files from this repository into appropriate locations in your repository.
   * Instead of downloading your model into the container, you can instead use `COPY`.
