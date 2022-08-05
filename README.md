@@ -11,6 +11,9 @@ It needs to:
 
 Both the input and output have to conform to input or output JSON schema respectively.
 
+If you're getting started, you can refer to our [documentation on building model connectors](https://covid-policy-modelling.github.io/connector.html).
+The rest of this document is intended for use as the initial README of your connector.
+
 ## Content
 
 * [Prerequisites](#prerequisites)
@@ -33,17 +36,7 @@ To get this framework to work you will need to have the following tooling instal
 
 ## Assumptions
 
-This repository and these instructions assume the following:
-
-* The *connector* will be in a public Github repository.
-* The *connector* will be developed in a repository separate to any others used by your model.
-* The *connector* will use the common input and output schema shared with other models.
-* The Docker images will be published automatically using [Github Actions](https://docs.github.com/en/actions).
-* The Docker image will be published to Github Packages (not the Github Container Registry).
-
-These are not requirements for integrating a model, but you should read the [*Alternative integrations*](#alternative-integrations) section later in the document for more information.
-
-The document also assumes a basic knowledge of Docker, JSON & JSON Schema.
+The document assumes a basic knowledge of Docker, JSON & JSON Schema.
 For more information on these:
 
 * [Docker - Getting Started](https://docs.docker.com/get-started/) - Parts 1-3 & 9 are most relevant.
@@ -52,46 +45,6 @@ For more information on these:
 * [Ten simple rules for writing Dockerfiles for reproducible data science](https://doi.org/10.1371/journal.pcbi.1008316).
 * [JSON](https://developer.mozilla.org/en-US/docs/Glossary/JSON).
 * [JSON Schema](http://json-schema.org/learn/getting-started-step-by-step).
-
-## Process
-
-1. Fork this repository.
-
-1. Ensure that your code can be run using the command line, e.g. using `Rscript` rather than *RStudio*, etc.
-
-1. Obtain a copy of the latest version of the output JSON schema:
-
-    ```bash
-    curl https://raw.githubusercontent.com/covid-policy-modelling/schemas/main/schema/output-common.json -o output-schema.json
-    ```
-
-1. Develop your connector (iteratively):
-   1. Create connector code (in a language of your choice) to transform the input/output from the COVID Policy Modelling schemas to/from the input/output your model uses, as described in more detail below, and execute your model.
-   1. Edit the [Dockerfile](./Dockerfile) to contain your model and connector code:
-      * Set an appropriate base image (if you already package your model as a Docker image, you can use this as the base image and some of the later steps will not be needed).
-      * Install any necessary dependencies to run your model.
-      * Add your model code to the image (e.g. using [RUN git clone](https://docs.docker.com/engine/reference/builder/#run) or `RUN wget`, etc.)
-      * Add the connector code (e.g. using [COPY](https://docs.docker.com/engine/reference/builder/#copy)).
-      * Set the `CMD` to run your connector code.
-      * Some further requirements are described in more detail below.
-   1. Build your image by running `docker-compose build run-model`.
-   1. Test your connector code by running `docker-compose run run-model`.
-      * You may need to edit the sample input file [test-job.json](test-job.json) if your model does not support the parameters specified in the file.
-      * You should not make changes to the `docker-compose.yml` file (e.g. to add mounts). These changes will not be available when the connector is run via the `web-ui`.
-   1. Validate the output of your connector by running `docker-compose run --rm validate`.
-   1. Push your changes to Github, and ensure the Docker image is built and published successfully.
-
-1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.1`) and push the tag to GitHub. Ensure the Docker image is built and published successfully.
-
-1. On your repository page on GitHub, go to "Packages" then select the package for your connector. Under "Danger Zone", select "Change visibility", and set the visibility to "Public". Enter the repository name to confirm.
-
-1. Edit [meta.yml](meta.yaml) to describe your model/connector.
-
-1. Raise a PR against the `web-ui` repository, copying the content of your `meta.yml` into the `models.yml` file.
-
-1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model.
-
-1. Update this README to be specific to your model, and to remove any parts that will not be needed in future (e.g. this *Process* section)
 
 ## Requirements for Docker images
 
@@ -148,40 +101,3 @@ Changes to models should be made by following a similar approach to initial crea
 1. Tag your model connector (`git tag v<version>`, e.g. `git tag v0.0.2`) and push the tag to GitHub. Ensure the Docker image is build and published successfully.
 1. Notify the maintainers of any infrastructure that deploys a specific version of your model (e.g in `web-ui/.override-staging/models.yml`)
   1. Maintainers can then follow the instructions for *Deploying updated code > model connectors* from `infrastructure/README.md` to release the model.
-
-## Alternative integrations
-
-* You can develop your connector to use a different input and/or output schema, such as [`MinimalModelInput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/input-minimal.json) and [`MinimalModelOutput` schema](https://github.com/covid-policy-modelling/schemas/blob/main/schema/output.json), or by adding a new model-specific schema.
-  * In that case, ensure you download the correct schema to use for validation, and follow [any relevant instructions](https://github.com/covid-policy-modelling/schemas/blob/main/README.md) for the schema.
-  * In your `meta.yml`, specify which schema you use, e.g.
-
-  ```yml
-    supportedSchemas:
-      input: MinimalModelInput
-      output: MinimalModelOutput
-  ```
-
-* You can develop your connector code in the same repository as your model.
-  * In that case, instead of forking simply download the files from this repository into appropriate locations in your repository.
-  * Instead of downloading your model into the container, you can instead use `COPY`.
-* You can develop in a private GitHub repository, with a private connector package.
-  * In this case, you will need to contact us to discuss appropriate access credentials.
-    * For the current staging server, this means giving the @covid-policy-modelling-bot *Read* access to your repository.
-* You can publish Docker images to any registry (Github Container Registry, Docker Hub, Azure Container Registry etc.).
-  * You will need to edit the workflow definitions in `.github/workflows` and the `imageURL` in `meta.yml`.
-  * If your image is private, contact us to discuss appropriate access credentials.
-* You can use an alternative CI system, or push images manually, or develop your code outside of Github
-  * Remove the `.github/workflows` directory (although the files in there should help you identify what steps you need to follow to integrate with your desired approach).
-
-## Examples
-
-The following existing connectors can be used as examples.
-Note that these have not necessarily used this template, and so may be laid out in a different format (i.e. as described in *Alternative integrations*).
-These are written in several languages (Python, R, TypeScript).
-Your connector can be in any language.
-
-* https://github.com/covid-policy-modelling/covasim-connector
-* https://github.com/gjackland/WSS
-* https://github.com/covid-policy-modelling/covid-sim-connector
-* https://github.com/covid-policy-modelling/basel-connector
-* https://github.com/covid-policy-modelling/sir-ode-python-connector
