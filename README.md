@@ -60,11 +60,11 @@ For more information on these:
   * Add it your repository and add it to the container at build-time, e.g. with [`COPY`](https://docs.docker.com/engine/reference/builder/#copy)/[`ADD`](https://docs.docker.com/engine/reference/builder/#add)
   * Download it to the container at build-time, e.g. with [`RUN wget`](https://docs.docker.com/engine/reference/builder/#run).
   * Download it in your connector code.
-* At run-time,
+* At run-time:
   * Copy/store any additional input data into `/data/input/`
-    * `/data/input/` will be volume mounted into the container, and will be available for download in the UI after completion (useful for audit/reproducibility purposes).
+    * `/data/input/` will be volume-mounted into the container, and will be available for download in the UI after completion (useful for audit/reproducibility purposes).
   * Copy/store any additional output data in `/data/output/`
-    * `/data/output` will be volume mounted into the container, and will be available for download in the UI after completion (useful for users to explore the output of your model beyond that included in the web-ui).
+    * `/data/output` will be volume-mounted into the container, and will be available for download in the UI after completion (useful for users to explore the output of your model beyond that included in the web-ui).
 * Any messages that are printed to STDOUT will not be displayed to end-users, but can be useful for debugging in the backend.
 * Any additional logging should be copied/stored in `/data/log` (this will be volume mounted into the container, but will not be available for download by default).
 
@@ -93,7 +93,7 @@ Your connector code should transform the output of your model into this format (
 
 ## Updating your model
 
-Changes to models should be made by following a similar approach to initial creation.
+Changes to models should be made by following a similar approach to initial creation:
 
 1. Make and test changes to your model / connector code.
 1. Edit `meta.yml` with any new parameters / regions etc. if necessary
